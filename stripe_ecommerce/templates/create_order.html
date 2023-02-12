@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Create an Order</h1>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {% for item in items %}
+    <input type="checkbox" name="items" value="{{ item.id }}">
+    {{ item.name }} - {{ item.formatter_price }}
+    <br>
+    {% endfor %}
+    <input type="submit" value="Create Order">
+</form>
+
+</body>
+</html>
