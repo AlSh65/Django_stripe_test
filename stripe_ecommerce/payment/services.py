@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-stripe.api_key = os.getenv("SECRET_STRIPE_API_KEY")
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 def create_stripe_checkout_session(item):
     session = stripe.checkout.Session.create(
