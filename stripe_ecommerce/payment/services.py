@@ -12,7 +12,7 @@ def create_stripe_payment(object):
         amount = object.price
     intent = stripe.PaymentIntent.create(
         amount=amount,
-        currency="usd",
+        currency=object.currency,
         payment_method_types=["card"]
     )
     return intent.client_secret

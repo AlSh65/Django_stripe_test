@@ -6,6 +6,10 @@ class Item(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.IntegerField(help_text='Цена в центах')
+    currency = models.CharField(max_length=3, choices=(
+        ('usd', 'usd'),
+        ('rub', 'rub')
+    ), default='usd')
 
     def __str__(self):
         return self.name
@@ -21,12 +25,15 @@ class Discount(models.Model):
     def __str__(self):
         return self.name
 
+
 class Tax(models.Model):
     name = models.CharField(max_length=255)
     value = models.FloatField(default=0)
 
     def __str__(self):
         return self.name
+
+
 class Order(models.Model):
     items = models.ManyToManyField(Item)
     total_price = models.FloatField()
@@ -42,6 +49,12 @@ class Order(models.Model):
         blank=True,
         null=True,
     )
+    currency = models.CharField(max_length=3,
+                                choices=(
+                                    ('usd', 'usd'),
+                                    ('rub', 'rub')
+                                ), default='usd')
+
     def total_price(self):
         self.total_price = sum([item.price for item in self.items.all()])
         if self.discount:
@@ -53,5 +66,4 @@ class Order(models.Model):
         else:
             tax_price = 0
         self.total_price = self.total_price - discounted_price - tax_price
-        return self.total_price / 100
-
+        return round(self.total_price / 100, 2)

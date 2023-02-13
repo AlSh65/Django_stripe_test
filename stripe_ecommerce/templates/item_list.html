@@ -9,7 +9,7 @@
   <ul>
     {% for item in items %}
     <li>
-      <h2><a href="{%%20url%20'payment:item'%20item.id%20%}">{{ item.name }}</a></h2>
+      <h2><a href="{% url 'payment:item' item.id %}">{{ item.name }}</a></h2>
       <p>Description: {{ item.description }}</p>
       <p>Price: {{ item.formatter_price }}</p>
       <hr>
