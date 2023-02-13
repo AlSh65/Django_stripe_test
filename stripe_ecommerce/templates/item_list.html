@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Title</title>
 </head>
 <body>
   <h1>List of items</h1>
   <ul>
     {% for item in items %}
-
-      <li>
-        <h2><a href="{% url 'payment:item' item.id %}">{{ item.name }}</a></h2>
-        <p>Description: {{ item.description }}</p>
-        <p>Price: {{ item.formatter_price }}</p>
-
-        <hr>
-      </li>
-    {% endfor %}
+    <li>
+      <h2><a href="{%%20url%20'payment:item'%20item.id%20%}">{{ item.name }}</a></h2>
+      <p>Description: {{ item.description }}</p>
+      <p>Price: {{ item.formatter_price }}</p>
+      <hr>
+    </li>{% endfor %}
   </ul>
 </body>
 </html>
-
-

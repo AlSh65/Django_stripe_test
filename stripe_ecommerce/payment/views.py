@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic.list import ListView
 from django.views import View
 
-from payment.services import create_stripe_checkout_session
+from payment.services import  create_stripe_payment
 
 from .models import Item, Order
 
@@ -19,15 +19,18 @@ class ItemListView(ListView):
 class BuyItem(View):
     def get(self, request, *args, **kwargs):
         item = get_object_or_404(Item, id=kwargs['id'])
-        session_id = create_stripe_checkout_session(item=item)
-        return JsonResponse({"session_id": session_id})
+        payment_id = create_stripe_payment(item)
+        return JsonResponse({"client_secret": payment_id})
+
 
 
 class ItemDetailView(View):
     def get(self, request, *args, **kwargs):
         item = get_object_or_404(Item, id=kwargs['id'])
         stripe_key = os.getenv("STRIPE_PUBLIC_KEY")
-        return render(request, 'item_detail.html', {'item': item, 'stripe_key' : stripe_key})
+        context = {'item': item, 'stripe_key': stripe_key}
+        return render(request, 'item_detail.html', context)
+
 
 class CreateOrderView(View):
     def get(self, request):
@@ -40,7 +43,8 @@ class CreateOrderView(View):
         order = Order.objects.create()
         order.items.set(items)
         order.save()
-        return redirect('payment:order_detail', order_id=order.id)
+        return redirect('payment:order_detail', id=order.id)
+
 
 class OrderDetailView(View):
     def get(self, request, *args, **kwargs):
@@ -48,8 +52,9 @@ class OrderDetailView(View):
         stripe_key = os.getenv("STRIPE_PUBLIC_KEY")
         return render(request, 'order_detail.html', {'order': order, 'stripe_key': stripe_key})
 
+
 class BuyOrder(View):
     def get(self, request, *args, **kwargs):
         order = get_object_or_404(Order, id=kwargs['id'])
-        session_id = create_stripe_checkout_session(order=order)
-        return JsonResponse({"session_id": session_id})
+        payment_id = create_stripe_payment(order)
+        return JsonResponse({"client_secret": payment_id})
